@@ -1,15 +1,21 @@
 import random
+from planet_names import planets
 class Room:
-    def __init__(self, id, name, description, x, y):
+    def __init__(self, id, name, x, y, atmosphere, moons, composition, density, temperature ):
         self.id = id
         self.name = name
-        self.description = description
+        self.description = f"{name} has {atmosphere} atmosphere, {composition} composition, {moons} moons orbitating around it, a density of {density} gm/cm³, and a temperature of circa {temperature}°"
         self.n_to = None
         self.s_to = None
         self.e_to = None
         self.w_to = None
         self.x = x
         self.y = y
+        self.atmosphere = atmosphere
+        self.moons = moons
+        self.composition = composition
+        self.density = density
+        self.temperature = temperature
         
     def __repr__(self):
         return f"({self.x}, {self.y})"
@@ -69,7 +75,9 @@ class World:
         Generate a (x, y) matrix with n rooms in it
         Note that the matrix should be big enough to contains the number of  rooms
         The rooms are procedurally generated 
-        '''                                                     
+        '''                                
+        atmospheres = ['no', 'hidrogen', 'oxygen', 'helium', 'carbon dioxide']
+        compositions = ['rocky', 'gaseous']                     
         self.grid = [None] * size_y                                                         # Initialize the grid          
         self.width = size_x
         self.height = size_y
@@ -80,7 +88,7 @@ class World:
         y = random.randrange(self.height)
         room_count = 0
         directions = ['n', 's', 'w', 'e']
-        start_room = Room(room_count, "Starting Room", "This is the starting room.", x, y)  # generate the starting room
+        start_room = Room(room_count, "Earth", x, y, atmospheres[2], 1, compositions[0], 5.5, 30)  # generate the starting room
         self.grid[y][x] = start_room
         previous_room = start_room
 
@@ -99,10 +107,15 @@ class World:
             elif direction == 'e' and x < size_x - 1 and not self.grid[y][x + 1]: 
                 x += 1
             else:                                                                               # if the spot is taken we go back to the beginning of the loop
-                continue                                                                       
-            
+                continue                         
+            room_name = planets[random.randrange(0, len(planets))]                                              
+            room_atm = atmospheres[random.randrange(0, len(atmospheres))]
+            room_moons = random.randint(0, 5)
+            room_cmp = compositions[random.randrange(0, len(compositions))]
+            room_dnsty = random.uniform(0.1, 10)
+            room_tmp = random.randint(-121, 975)
             room_count += 1
-            room = Room(room_count, "A Generic Room", "This is a generic room.", x, y)          # Create a room in the given direction
+            room = Room(room_count, room_name, x, y, room_atm, room_moons, room_cmp, room_dnsty, room_tmp) # Create a room in the given direction
             self.grid[y][x] = room                                                              # Save the room in the World grid
             previous_room.connect_rooms(room, direction)                                        # Connect the new room to the previous room
             previous_room = room
@@ -123,13 +136,19 @@ class World:
                     x += 1
                 else:
                     continue
+                room_name = planets[random.randrange(0, len(planets))]                                              
+                room_atm = atmospheres[random.randrange(0, len(atmospheres))]
+                room_moons = random.randint(0, 5)
+                room_cmp = compositions[random.randrange(0, len(compositions))]
+                room_dnsty = random.uniform(0.1, 10)
+                room_tmp = random.randint(-121, 975)
                 room_count += 1
                 if room_count == num_rooms:                                                      # during the last iteration
-                    end_room = Room(room_count, 'This is the end', 'My only friend, the end', x, y) # we set the end room
+                    end_room = Room(room_count, room_name, x, y, room_atm, room_moons, room_cmp, room_dnsty, room_tmp) # we set the end room
                     self.grid[y][x] = end_room
                     previous_room.connect_rooms(end_room, direction)
                     break
-                room = Room(room_count, "A Generic Room", "This is a generic room.", x, y)
+                room = Room(room_count, room_name, x, y, room_atm, room_moons, room_cmp, room_dnsty, room_tmp)
                 self.grid[y][x] = room
                 previous_room.connect_rooms(room, direction)                                    
 
@@ -189,39 +208,39 @@ class World:
         print(str)
 
 
-# TO TEST THE CLASS COMMENT OUT THIS CODE
-# w = World()
-# num_rooms = 500
-# width = 25
-# height = 25
-# w.generate_rooms(width, height, num_rooms)
-# print(w.grid)
-# w.print_rooms()
-# one_connection = 0
-# two_connection = 0
-# three_connection = 0
-# four_connection = 0
+#TO TEST THE CLASS COMMENT OUT THIS CODE
+w = World()
+num_rooms = 500
+width = 25
+height = 25
+w.generate_rooms(width, height, num_rooms)
+print(w.grid[5][5].n_to.id)
+w.print_rooms()
+one_connection = 0
+two_connection = 0
+three_connection = 0
+four_connection = 0
 
-# for row in w.grid:
-#     for room in row:
-#         if room:
-#             count = [room.n_to, room.s_to, room.e_to, room.w_to]
-#             result = count.count(None)
-#             if result == 0:
-#                 four_connection += 1
-#             if result == 1:
-#                 three_connection += 1
-#             if result == 2:
-#                 two_connection += 1
-#             if result == 3:
-#                 one_connection +=1
+for row in w.grid:
+    for room in row:
+        if room:
+            count = [room.n_to, room.s_to, room.e_to, room.w_to]
+            result = count.count(None)
+            if result == 0:
+                four_connection += 1
+            if result == 1:
+                three_connection += 1
+            if result == 2:
+                two_connection += 1
+            if result == 3:
+                one_connection +=1
 
-# print(f'one connection: {one_connection}')
-# print(f'two connection: {two_connection}')
-# print(f'three connection: {three_connection}')
-# print(f'four connection: {four_connection}')
+print(f'one connection: {one_connection}')
+print(f'two connection: {two_connection}')
+print(f'three connection: {three_connection}')
+print(f'four connection: {four_connection}')
 
             
             
 
-# print(f"\n\nWorld\n  height: {height}\n  width: {width},\n  num_rooms: {num_rooms}\n")
+print(f"\n\nWorld\n  height: {height}\n  width: {width},\n  num_rooms: {num_rooms}\n")
