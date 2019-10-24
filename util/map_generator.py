@@ -1,5 +1,6 @@
 import random
-from planet_names import planets
+from util.planet_names import planets
+
 class Room:
     def __init__(self, id, name, x, y, atmosphere, moons, composition, density, temperature ):
         self.id = id
