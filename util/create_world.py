@@ -18,6 +18,11 @@ for column in world.grid:
       if room.id == 1:
         starting_room = room
 
+players = Player.objects.all()
+for p in players:
+  p.currentRoom=starting_room.id
+  p.save()
+
 for room in rooms:
   if room['n_to']:
     room['room'].connectRooms(room['n_to'], 'n')
@@ -27,8 +32,3 @@ for room in rooms:
     room['room'].connectRooms(room['e_to'], 'e')
   if room['w_to']:
     room['room'].connectRooms(room['w_to'], 'w')
-  
-players=Player.objects.all()
-for p in players:
-  p.currentRoom=starting_room.id
-  p.save()
