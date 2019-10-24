@@ -12,7 +12,7 @@ starting_room = None
 for column in world.grid:
   for room in column:
     if room and room != 'wall':
-      r = Room(id=room.id, title= room.name, description=room.description)
+      r = Room(id=room.id, title= room.name, description=room.description, x=room.x, y=room.y)
       r.save()
       rooms.append({'room': r, 'n_to': room.n_to, 's_to': room.s_to, 'e_to': room.e_to,'w_to': room.w_to,})
       if room.id == 1:
