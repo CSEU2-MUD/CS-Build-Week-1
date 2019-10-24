@@ -1,5 +1,6 @@
 import random
-from planet_names import planets
+from util.planet_names import planets
+
 class Room:
     def __init__(self, id, name, x, y, atmosphere, moons, composition, density, temperature ):
         self.id = id
@@ -86,7 +87,7 @@ class World:
 
         x = 0                                                                               # starting point on a random cell in the left column
         y = random.randrange(self.height)
-        room_count = 0
+        room_count = 1
         directions = ['n', 's', 'w', 'e']
         start_room = Room(room_count, "Earth", x, y, atmospheres[2], 1, compositions[0], 5.5, 30)  # generate the starting room
         self.grid[y][x] = start_room
@@ -210,9 +211,9 @@ class World:
 
 #TO TEST THE CLASS COMMENT OUT THIS CODE
 # w = World()
-# num_rooms = 500
-# width = 25
-# height = 25
+# num_rooms = 5
+# width = 2
+# height = 3
 # w.generate_rooms(width, height, num_rooms)
 # w.print_rooms()
 # one_connection = 0
